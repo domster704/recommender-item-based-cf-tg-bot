@@ -14,8 +14,8 @@ async def get_recommendations(message: Message):
 
     async with aiohttp.ClientSession() as session:
         async with session.get(
-                f"{API_URL}/v1/recommendations/{tg_id}",
-                headers={"Authorization": f"Bearer {API_TOKEN}"}
+            f"{API_URL}/v1/recommendations/{tg_id}",
+            headers={"Authorization": f"Bearer {API_TOKEN}"},
         ) as r:
             if not r.ok:
                 await message.answer("Не удалось получить рекомендации")

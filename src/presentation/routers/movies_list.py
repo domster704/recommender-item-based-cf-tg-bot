@@ -50,7 +50,7 @@ async def send_page(message: Message, state: FSMContext):
 
     await message.answer(
         f"Страница {page + 1}/{(total - 1) // MOVIES_PER_PAGE + 1}",
-        reply_markup=kb.as_markup()
+        reply_markup=kb.as_markup(),
     )
 
 

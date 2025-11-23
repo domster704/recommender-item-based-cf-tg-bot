@@ -1,14 +1,18 @@
-from typing import Optional
+from enum import StrEnum
 
 from pydantic import BaseModel
 
+from src.domain.entities.occupation import Occupation
+
+
+class UserGender(StrEnum):
+    M = "male"
+    F = "female"
+
 
 class UserModel(BaseModel):
-    tg_user_id: int
-    first_name: Optional[str]
-    last_name: Optional[str]
-    phone: Optional[str]
-    email: Optional[str]
-
-    def is_registered(self) -> bool:
-        return self.phone is not None
+    id: int | None
+    age: int
+    gender: UserGender
+    occupation: Occupation | None
+    tg_user_id: int | None = None

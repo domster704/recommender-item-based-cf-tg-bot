@@ -8,7 +8,6 @@ ROOT_DIR = Path(__file__).resolve().parents[2]
 
 class Settings(BaseSettings):
     api_url: str
-    front_url: str
     api_key: str
     bot_token: str
 

@@ -13,16 +13,11 @@ class UserRepositoryABC(ABC):
         pass
 
     @abstractmethod
-    async def register(self, user: UserModel) -> None:
-        """Зарегистрировать пользователя с полными данными"""
-        pass
-
-    @abstractmethod
     async def get(self, tg_user_id: int) -> Optional[UserModel]:
         """Получить пользователя по Telegram ID"""
         pass
 
     @abstractmethod
-    async def grant_trial(self, tg_user_id: int) -> None:
-        """Выдать пробный доступ пользователю"""
+    async def update_user(self, data: dict) -> None:
+        """Обновить данные пользователя"""
         pass

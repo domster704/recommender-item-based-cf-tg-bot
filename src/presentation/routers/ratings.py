@@ -11,12 +11,8 @@ async def send_rating(user_id: int, movie_id: int, rating: int):
     async with aiohttp.ClientSession() as s:
         await s.post(
             f"{API_URL}/v1/ratings/",
-            json={
-                "user_id": str(user_id),
-                "movie_id": str(movie_id),
-                "rating": rating
-            },
-            headers={"Authorization": f"Bearer {API_TOKEN}"}
+            json={"user_id": str(user_id), "movie_id": str(movie_id), "rating": rating},
+            headers={"Authorization": f"Bearer {API_TOKEN}"},
         )
 
 
