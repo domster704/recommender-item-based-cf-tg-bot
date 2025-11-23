@@ -10,7 +10,7 @@ from src.infrastructure.exceptions import InfrastructureError
 
 
 class APIUserRepository(UserRepositoryABC):
-    def __init__(self, api_url: str, api_token: str):
+    def __init__(self, api_url: str):
         self.api_url = api_url
 
     async def add(
