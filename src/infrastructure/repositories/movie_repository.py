@@ -13,7 +13,9 @@ class APIMovieRepository:
             async with aiohttp.ClientSession() as s:
                 async with s.get(f"{self.api_url}/v1/movies/") as r:
                     if not r.ok:
-                        raise InfrastructureError(f"Ошибка загрузки фильмов: {r.status}")
+                        raise InfrastructureError(
+                            f"Ошибка загрузки фильмов: {r.status}"
+                        )
 
                     data = await r.json()
 
@@ -24,11 +26,9 @@ class APIMovieRepository:
                     release_date=m["release_date"],
                     video_release_date=m["video_release_date"],
                     imdb_url=m["imdb_url"],
-                    genres=[
-                        Genre(id=g["id"], name=g["name"])
-                        for g in m["genres"]
-                    ]
-                ) for m in data
+                    genres=[Genre(id=g["id"], name=g["name"]) for g in m["genres"]],
+                )
+                for m in data
             ]
 
             return movies
@@ -51,10 +51,7 @@ class APIMovieRepository:
                 release_date=data["release_date"],
                 video_release_date=data["video_release_date"],
                 imdb_url=data["imdb_url"],
-                genres=[
-                    Genre(id=g["id"], name=g["name"])
-                    for g in data["genres"]
-                ]
+                genres=[Genre(id=g["id"], name=g["name"]) for g in data["genres"]],
             )
 
             return movie

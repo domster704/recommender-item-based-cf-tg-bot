@@ -26,12 +26,7 @@ async def rate(callback: CallbackQuery):
     user: UserModel = await user_uc.execute(tg_user_id)
     movie: Movie = await movie_uc.execute(movie_id)
 
-    rating = Rating(
-        user=user,
-        movie=movie,
-        rating=rating_value,
-        timestamp=None
-    )
+    rating = Rating(user=user, movie=movie, rating=rating_value, timestamp=None)
 
     await rating_uc.execute(rating)
 

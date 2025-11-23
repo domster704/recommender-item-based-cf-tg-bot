@@ -20,8 +20,8 @@ class APIRatingRepository:
 
             async with aiohttp.ClientSession() as s:
                 async with s.post(
-                        f"{self.api_url}/v1/ratings/",
-                        json=payload,
+                    f"{self.api_url}/v1/ratings/",
+                    json=payload,
                 ) as r:
                     if not r.ok:
                         raise InfrastructureError(

@@ -4,16 +4,17 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from src.domain.entities.movie import Movie
 from src.presentation.dependencies.movies import get_movie_by_id_use_case
+from src.presentation.routers.movies_list import MovieCallbackData
 
 movie_card_router = Router()
 
 
-@movie_card_router.callback_query(F.data.startswith("movie_"))
-async def open_movie(callback: CallbackQuery):
-    movie_id = int(callback.data.split("_")[1])
+@movie_card_router.callback_query(MovieCallbackData.filter())
+async def movie_selected(callback: CallbackQuery, callback_data: MovieCallbackData):
+    movie_id: int = callback_data.id
 
-    uc = get_movie_by_id_use_case()
-    movie: Movie = await uc.execute(movie_id)
+    use_case = get_movie_by_id_use_case()
+    movie: Movie = await use_case.execute(movie_id)
 
     genres = ", ".join(g.name for g in movie.genres)
 
