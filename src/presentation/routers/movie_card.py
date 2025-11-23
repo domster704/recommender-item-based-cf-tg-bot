@@ -1,30 +1,29 @@
-import aiohttp
 from aiogram import Router, F
 from aiogram.types import CallbackQuery
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-from src.config.config import API_URL
+from src.domain.entities.movie import Movie
+from src.presentation.dependencies.movies import get_movie_by_id_use_case
 
 movie_card_router = Router()
-
-
-async def load_movie(movie_id: int):
-    async with aiohttp.ClientSession() as s:
-        async with s.get(f"{API_URL}/v1/movies/{movie_id}") as r:
-            return await r.json()
 
 
 @movie_card_router.callback_query(F.data.startswith("movie_"))
 async def open_movie(callback: CallbackQuery):
     movie_id = int(callback.data.split("_")[1])
 
-    movie = await load_movie(movie_id)
+    uc = get_movie_by_id_use_case()
+    movie: Movie = await uc.execute(movie_id)
+
+    genres = ", ".join(g.name for g in movie.genres)
 
     text = f"""
-<b>{movie['title']}</b> ({movie['release_date']})
+<b>{movie.title}</b>
+Дата выхода: {movie.release_date}
 
-Жанры: {", ".join(movie['genres'])}
-Описание: {movie['overview']}
+Жанры: {genres}
+
+Ссылка IMDb: {movie.imdb_url}
 """
 
     kb = InlineKeyboardBuilder()

@@ -15,7 +15,6 @@ from src.presentation.keyboards.menu import main_menu_keyboard
 from src.presentation.keyboards.occupations import occupations_keyboard
 
 menu_router = Router()
-repo = APIUserRepository(API_URL, API_TOKEN)
 
 
 class EditOccupation(StatesGroup):

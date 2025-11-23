@@ -1,23 +1,16 @@
-import aiohttp
 from aiogram import Router, F
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery
-from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-from src.config.config import API_URL
+from src.presentation.dependencies.movies import get_movies_use_case
 
 movies_router = Router()
 
 MOVIES_PER_PAGE = 5
 
 
-async def load_movies():
-    async with aiohttp.ClientSession() as s:
-        async with s.get(f"{API_URL}/v1/movies/") as r:
-            return await r.json()
-
-
-@movies_router.message(F.text == "🎬 Список фильмов")
+@movies_router.message(F.text == "Список фильмов")
 async def movies_start(message: Message, state: FSMContext):
     await state.update_data(page=0)
     await send_page(message, state)
@@ -27,30 +20,43 @@ async def send_page(message: Message, state: FSMContext):
     data = await state.get_data()
     page = data.get("page", 0)
 
-    movies = await load_movies()
-    total = len(movies)
+    movies_uc = get_movies_use_case()
+    movies = await movies_uc.execute()
 
+    total = len(movies)
     start = page * MOVIES_PER_PAGE
     end = start + MOVIES_PER_PAGE
-
     page_movies = movies[start:end]
 
-    kb = InlineKeyboardBuilder()
+    keyboard = InlineKeyboardBuilder()
 
-    for m in page_movies:
-        kb.button(text=m["title"], callback_data=f"movie_{m['id']}")
+    for movie in page_movies:
+        keyboard.button(text=movie.title, callback_data=f"movie_{movie.id}")
+
+    keyboard.adjust(1)
 
     nav_row = []
-    if page > 0:
-        kb.button(text="⬅ Назад", callback_data="page_prev")
-    if end < total:
-        kb.button(text="Далее ➡", callback_data="page_next")
 
-    kb.adjust(1)
+    if page > 0:
+        nav_row.append(
+            InlineKeyboardBuilder()
+            .button(text="⬅ Назад", callback_data="page_prev")
+            .as_markup().inline_keyboard[0][0]
+        )
+
+    if end < total:
+        nav_row.append(
+            InlineKeyboardBuilder()
+            .button(text="Вперёд ➡", callback_data="page_next")
+            .as_markup().inline_keyboard[0][0]
+        )
+
+    if nav_row:
+        keyboard.row(*nav_row)
 
     await message.answer(
         f"Страница {page + 1}/{(total - 1) // MOVIES_PER_PAGE + 1}",
-        reply_markup=kb.as_markup(),
+        reply_markup=keyboard.as_markup(),
     )
 
 
