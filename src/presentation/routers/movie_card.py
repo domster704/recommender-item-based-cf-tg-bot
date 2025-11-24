@@ -20,7 +20,7 @@ async def movie_selected(callback: CallbackQuery, callback_data: MovieCallbackDa
 
     text = f"""
 <b>{movie.title}</b>
-Дата выхода: {movie.release_date}
+Дата выхода: <i>{movie.release_date}</i>
 
 Жанры: {genres}
 

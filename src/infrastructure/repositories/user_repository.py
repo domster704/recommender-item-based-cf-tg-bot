@@ -73,7 +73,6 @@ class APIUserRepository(UserRepositoryABC):
                         )
 
                     data = await response.json()
-                    print(data)
                     return UserModel(**data)
         except aiohttp.ClientError as e:
             raise InfrastructureError(f"Ошибка сети: {e}") from e

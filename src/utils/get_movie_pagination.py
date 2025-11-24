@@ -11,12 +11,15 @@ class MovieCallbackData(CallbackData, prefix="movie"):
 def get_movie_pagination(
     movies: list[Movie],
     callback_data_navigation_ending: str,
-    max_items_per_page: int = 5,
+    max_items_per_page: int = 10,
 ) -> Pagination:
     items: list[PaginationItems] = []
     for m in movies:
         items.append(
-            PaginationItems(text=m.title, callback_data=MovieCallbackData(id=m.id))
+            PaginationItems(
+                text=f"{m.genres[0].name} - {m.title}",
+                callback_data=MovieCallbackData(id=m.id),
+            )
         )
 
     pagination = Pagination(
